@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: dev
   datasource:
     url: jdbc:mysql://localhost:3306/just4me?characterEncoding=utf-8&serverTimezone=GMT%2B8
     username: root
@@ -11,4 +13,5 @@ spring:
 
 just4me:
   api-package: com.gxu.just4me.api
+
 

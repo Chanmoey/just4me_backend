@@ -8,7 +8,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -64,6 +66,24 @@ public class GlobalExceptionAdvice {
         String message = this.formatAllErrorMessages(errors);
 
         return new UnifyResponse(10001, message, requestMessage);
+    }
+
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public UnifyResponse handleHttpMessageNotReadableException(HttpServletRequest request,
+                                                               HttpMessageNotReadableException e) {
+        String requestMessage = this.getRequestMessage(request);
+        return new UnifyResponse(10000, this.configuration.getMessage(10000), requestMessage);
+    }
+
+    @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public UnifyResponse handleHttpMessageNotReadableException(HttpServletRequest request,
+                                                               HttpRequestMethodNotSupportedException e) {
+        String requestMessage = this.getRequestMessage(request);
+        return new UnifyResponse(10006, this.configuration.getMessage(10006), requestMessage);
     }
 
     /**
